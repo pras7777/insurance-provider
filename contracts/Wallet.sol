@@ -1,12 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.19;
 
-/**
- * @title Wallet
- * @notice This smart contract provides wallet insurance with different packages. Users can choose 
- * from Regular, Robust, or Comprehensive packages, each with a different premium. Claims can be 
- * submitted and are subject to approval or rejection by the admin (verifier company).
- */
+
 contract Wallet{
     address payable public verifierCompany;
     uint256 private constant REGULAR_PREMIUM = 1000;
@@ -40,10 +35,6 @@ contract Wallet{
         _;
     }
 
-    /**
-     * @notice Allows users to select an insurance package and make the premium payment
-     * @param _package The chosen insurance package
-     */
     function selectPackage(InsurancePackage _package) external payable {
         require(
             _package >= InsurancePackage.Regular && _package <= InsurancePackage.Comprehensive,
@@ -59,8 +50,7 @@ contract Wallet{
         user.isActive = true;
         user.lastPaymentTimestamp = block.timestamp;
 
-        // Set the premium amount based on the selected insurance package
-        if (_package == InsurancePackage.Regular) {
+             if (_package == InsurancePackage.Regular) {
             user.premiumAmount = REGULAR_PREMIUM;
         } else if (_package == InsurancePackage.Robust) {
             user.premiumAmount = ROBUST_PREMIUM;
@@ -77,9 +67,7 @@ contract Wallet{
     }
     
 
-    /**
-     * @notice Allows users to submit a claim for their insured wallet
-     */
+ 
     function submitClaim() external {
         require(
             users[msg.sender].isActive,
@@ -92,10 +80,6 @@ contract Wallet{
         claims[msg.sender] = ClaimStatus.Pending;
     }
 
-    /**
-     * @notice Allows the admin to approve a user's claim and transfer the claim payout
-     * @param _user The address of the user whose claim is to be approved
-     */
     function approveClaim(address _user) external onlyAdmin {
         require(
             users[_user].isActive,
@@ -112,10 +96,6 @@ contract Wallet{
         require(success, "Claim payout failed.");
     }
 
-    /**
-     * @notice Allows the admin to reject a user's claim
-     * @param _user The address of the user whose claim is to be rejected
-     */
     function rejectClaim(address _user) external onlyAdmin {
         require(
             users[_user].isActive,
@@ -129,9 +109,6 @@ contract Wallet{
         claims[_user] = ClaimStatus.Rejected;
     }
 
-    /**
-     * @notice Allows users to cancel their insurance package
-     */
     function cancelInsurance() external {
         require(
             users[msg.sender].isActive,
@@ -141,9 +118,7 @@ contract Wallet{
         users[msg.sender].isActive = false;
     }
 
-    /**
-     * @notice Allows users to pay their premium to the verifier company
-     */
+
     function payPremiumToVerifier() external payable {
         User storage user = users[msg.sender];
         require(
