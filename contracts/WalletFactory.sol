@@ -5,10 +5,10 @@ import "./Wallet.sol";
 
 
 contract WalletFactory {
-    address payable public verifierCompany; // Address of the verifier company
-    address[] public deployedContracts; // Stores addresses of all deployed Wallet contracts
-    mapping(address => address) public contractOwners; // Maps user addresses to their Wallet contract addresses
-    mapping(address => bool) public hasContract; // Tracks whether a user has deployed a Wallet contract
+    address payable public verifierCompany; 
+    address[] public deployedContracts; 
+    mapping(address => address) public contractOwners; 
+    mapping(address => bool) public hasContract; 
 
  
     constructor(address payable _verifierCompanyAddress) {
