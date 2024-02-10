@@ -4,7 +4,7 @@ pragma solidity 0.8.19;
 /**
  * Insurance Contract
  * This contract provides two categories of insurance policies, each with a different premium and collateral limit.
- *      It includes functions for users to set collateral values, pay premiums, and for the admin to approve collateral.
+ * It includes functions for users to set collateral values, pay premiums, and for the admin to approve collateral.
  */
 contract Insurance {
     address payable public verifierCompany;
@@ -58,25 +58,21 @@ contract Insurance {
     }
 
     /**
-     * @notice Allows Category A users to pay their insurance premium.
+     * @notice Allows users to pay their insurance premium based on the selected category.
+     * @param _category The insurance category (1 for Category A, 2 for Category B).
      */
-    function payPremiumCategoryA() external payable {
+    function payPremium(uint256 _category) external payable {
         require(users[msg.sender].collateralAmount > 0, "No collateral value set");
-        require(users[msg.sender].collateralAmount <= CATEGORY_A_MAX_COLLATERAL, "Collateral value exceeds the limit for Category A");
-        require(msg.value >= CATEGORY_A_PREMIUM, "Incorrect premium amount");
-
-        _updateLastPaymentTimestamp(msg.sender);
-
-        verifierCompany.transfer(msg.value); // Transfer the premium amount to the verifier company
-    }
-
-    /**
-     * @notice Allows Category B users to pay their insurance premium.
-     */
-    function payPremiumCategoryB() external payable {
-        require(users[msg.sender].collateralAmount > 0, "No collateral value set");
-        require(users[msg.sender].collateralAmount <= CATEGORY_B_MAX_COLLATERAL, "Collateral value exceeds the limit for Category B");
-        require(msg.value >= CATEGORY_B_PREMIUM, "Incorrect premium amount");
+        
+        if (_category == 1) {
+            require(users[msg.sender].collateralAmount <= CATEGORY_A_MAX_COLLATERAL, "Collateral value exceeds the limit for Category A");
+            require(msg.value >= CATEGORY_A_PREMIUM, "Incorrect premium amount");
+        } else if (_category == 2) {
+            require(users[msg.sender].collateralAmount <= CATEGORY_B_MAX_COLLATERAL, "Collateral value exceeds the limit for Category B");
+            require(msg.value >= CATEGORY_B_PREMIUM, "Incorrect premium amount");
+        } else {
+            revert("Invalid category");
+        }
 
         _updateLastPaymentTimestamp(msg.sender);
 
