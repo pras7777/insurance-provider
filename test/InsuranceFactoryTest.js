@@ -2,35 +2,34 @@
 const { ethers } = require("hardhat");
 const { expect } = require("chai");
 
-// Describe block defines a test suite for the InsuranceFactory contract
+
 describe("InsuranceFactory", () => {
-    // Declaration of variables that will be used in the tests
+  
     let InsuranceFactory, Insurance, insuranceFactory;
     let verifierCompany, owner, addr1, addr2;
 
-    // 'before' hook runs once before all the tests in the describe block
+   k
     before(async () => {
-        // Getting signers which represent Ethereum accounts
+    
         [owner, addr1, addr2] = await ethers.getSigners();
 
-        // Deploying the InsuranceFactory and Insurance contract factories
+     
         InsuranceFactory = await ethers.getContractFactory("InsuranceFactory");
         Insurance = await ethers.getContractFactory("Insurance");
 
-        // Setting the verifierCompany to the address of the owner account
+       
         verifierCompany = owner.address;
-        // Deploying the InsuranceFactory contract with the verifierCompany as a constructor argument
+      
         insuranceFactory = await InsuranceFactory.deploy(verifierCompany);
     });
 
-    // Test case to verify the creation of a new insurance contract
     it("should create a new insurance contract", async () => {
-        // Creating a new insurance contract through the factory
+      
         await insuranceFactory.createInsurance();
 
-        // Getting the contract address associated with the owner
+   
         const contractAddress = await insuranceFactory.getInsuranceContractByOwner(owner.address);
-        // Expecting the contract address to not be null, indicating successful creation
+     
         expect(contractAddress).to.not.be.null;
     });
 
